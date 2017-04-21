@@ -14,33 +14,36 @@ namespace Ball
     public partial class Form1 : Form
     {
         Graphics graphic;
+        Graphics graphic2;
         Random random;
         List<ColorBall> ballList;
+        Image image;
+        Bitmap bitmap;
 
         const int SIZE = 50;
-
         bool PAUSE;
         
         public Form1()
         {
             InitializeComponent();
+            bitmap = new Bitmap(panel1.Width, panel1.Height);
+            graphic = Graphics.FromImage(bitmap);
+            graphic2 = panel1.CreateGraphics();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //playAnimation();
             PAUSE = false;
             timer1.Start();
-
-            
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            graphic = panel1.CreateGraphics();
 
             random = new Random();
             PAUSE = false;
+
+            initBalls();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -53,39 +56,26 @@ namespace Ball
         {
             panel1.BackColor = Color.Red;
 
-            initBalls();
-
-            //Thread thread = new Thread(startMoveBall);
-
-            //thread.Start();
-
-            //thread.Join();
-
             startMoveBall();
-            
         }
 
         private void startMoveBall()
         {
             
-                graphic.Clear(panel1.BackColor);
+          graphic.Clear(panel1.BackColor);
 
-                foreach (ColorBall ball in ballList)
-                {
-                    graphic.FillEllipse(Brushes.Green, ball.X, ball.Y, ball.SIZE, ball.SIZE);
+          foreach (ColorBall ball in ballList)
+          {
+              graphic.DrawImage(Image.FromFile(@"C:\Users\Gesko927\OneDrive\Visual Projects\Ball\Ball\bin\Debug\Ship.png"), new Point(ball.X, ball.Y));
+              ball.MoveBall();
+          }
 
-                    ball.MoveBall();
-                }
-
-
-           
+          graphic2.DrawImage(bitmap, 0, 0);
 
         }
 
         private void initBalls()
         {
-            
-
             ballList = new List<ColorBall>();
 
             /**
@@ -93,7 +83,7 @@ namespace Ball
              * ballList.Add(new ColorBall(panel1));
              * Завжди створються один і той самий об'єкт
              */
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 10; ++i)
             {
                 int x = random.Next(SIZE, this.panel1.ClientSize.Width);
                 int y = random.Next(SIZE, this.panel1.ClientSize.Height);
